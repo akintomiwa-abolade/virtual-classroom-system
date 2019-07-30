@@ -166,5 +166,48 @@ class DeveloperController{
             res.send(500);
         }
     }
+
+    // get students method
+    static  getStudents(req, res){
+        try{
+            Student.findAll({})
+                .then(result=>{
+                    if(result.length > 0){
+                        var students = [];
+                        for(var i = 0; i < result.length; i++){
+                            students.push(result[i].dataValues);
+                        }
+                        res.status(200).json(students);
+                    }else{
+                        res.send(400)
+                    }
+                })
+                .catch(err=>{
+                res.send(err);
+            })
+        }catch (e) {
+            res.send(500);
+        }
+    }
+
+    // create a new student
+    static createStudent(req, res){
+        try{
+            var classroom_id = req.body.classroom_id;
+            var student_name = req.body.student_name;
+
+                        var createStudent = {
+                            classroom_id: classroom_id,
+                            student_name: student_name
+                        }
+                        Student.create(createStudent)
+                            .then(data=>{
+                                res.status(201).json({success:true, message: "Student created successfully."})
+                            })
+                            .catch(err=> res.json({error: err}));
+        }catch (e) {
+            res.send(500);
+        }
+    }
 }
 module.exports = DeveloperController;
